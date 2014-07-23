@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from math import *
 from os import listdir
 from os.path import isfile, join
+from subprocess import call
 
 #treat id labels as strings, but specify their size as the largest id
 
@@ -67,42 +68,37 @@ def dAngSep(ra1d, dec1d, ra2d, dec2d):
 kelt_cat_files = [ f for f in listdir('/media/sf_Astro/k_cat/single_canon/') if isfile(join('/media/sf_Astro/k_cat/single_canon/',f))]
 
 overlap_sets = [ ('N01','N02'),('N02','N03'),('N03','N04'),('N04','N05'),('N05','N06'),('N06','N07'),('N07','N08'),('N08','N09'),\
-                 ('N09','N10'),('N10','N11'),('N11','N12'),('N12','N13'),('N02','N13'),('S19','S20'),('S20','S22'),\
+                 ('N09','N10'),('N10','N11'),('N11','N12'),('N12','N13'),('N01','N13'),('S19','S20'),('S20','S22'),\
                  ('S22','S23'),('S23','S24'),('S24','S25'),('S25','S26'),('S26','S27'),('S27','S28') ]
 
-#for file_no in range(0,len(kelt_cat_files)-1):
-for field_pair in overlap_sets:
-    file1 = field_pair[0]
-    file2 = field_pair[1]
-#each tuple in overlap_sets contains fields that overlap, with the lower-numbered field first
 
-#use this syntax to compare just two overlappingfields
-#for file_no in range(1,2,1):
+def Overlap_search(field_1, field_2):
+  #for file_no in range(0,len(kelt_cat_files)-1):
+  #each tuple in overlap_sets contains fields that overlap, with the lower-numbered field first
+
+  #use this syntax to compare just two overlappingfields
+  #for file_no in range(1,2,1):
   #file2 = 'S12_all.dat'
   #file1 = 'S26_all.dat'
-  
-  
-### Use this block when looking at overlap between 1 -> 2
-#  file1 = kelt_cat_files[file_no]
-#  file2 = kelt_cat_files[file_no+1]
-### Use this block when looking at overlap between 1 -> 2  
-  
 
-### Use this block when looking at overlap between 2 -> 1
+  ### Use this block when looking at overlap between 1 -> 2
+  #  file1 = kelt_cat_files[file_no]
+  #  file2 = kelt_cat_files[file_no+1]
+  ### Use this block when looking at overlap between 1 -> 2  
+
+  ### Use this block when looking at overlap between 2 -> 1
   #file2 = kelt_cat_files[file_no]
   #file1 = kelt_cat_files[file_no+1]
-### Use this block when looking at overlap between 2 -> 1
-  
-  
-  field1 = file1[:3]
-  field2 = file2[:3]
+  ### Use this block when looking at overlap between 2 -> 1
+  field1 = field_1[:3]
+  field2 = field_2[:3]
 
   
 #######Use this to get data for most adjacent files (like N01 and N02, N02 and N03,...)
 ####### The single_canon folder contains files for each field with unique entries, as opposed to 
 ####### files in single_all, which have duplicate lines
-  data1 = np.genfromtxt('/media/sf_Astro/k_cat/single_canon/{0}'.format(file1), dtype='|S44')
-  data2 = np.genfromtxt('/media/sf_Astro/k_cat/single_canon/{0}'.format(file2), dtype='|S44')
+  data1 = np.genfromtxt('/media/sf_Astro/k_cat/single_canon/{0}'.format(field_1), dtype='|S44')
+  data2 = np.genfromtxt('/media/sf_Astro/k_cat/single_canon/{0}'.format(field_2), dtype='|S44')
 
 #######Use this to get data for overlapping, but non-adjacent files (like N01 and N13)
 ### be careful with the order. for 1 -> 2 matching, data1=N01, data2=N02. reverse for 2 -> 1
@@ -120,25 +116,25 @@ for field_pair in overlap_sets:
 #When this runs, we only see 2:2 matches (1_e, 1_w):(2_e, 2_w) and 1:1 matches (1_e, null):(2_e,null)
   eid2 = np.array([ row[0] for row in data2_sort ])
   eid1 = np.array([ row[0] for row in data1_sort ])
-  wid2 = np.array([ row[2] for row in data2_sort ])
-  wid1 = np.array([ row[2] for row in data1_sort ])
-  dec2 = np.array([ row[4] for row in data2_sort ]).astype(np.float)
-  dec1 = np.array([ row[4] for row in data1_sort ]).astype(np.float)
-  ra2 = np.array([ row[3] for row in data2_sort ]).astype(np.float)
-  ra1 = np.array([ row[3] for row in data1_sort ]).astype(np.float)
-  mag2e = np.array([ row[5] for row in data2_sort ])
-  mag1e = np.array([ row[5] for row in data1_sort ])
-  mag2w = np.array([ row[6] for row in data2_sort ])
-  mag1w = np.array([ row[6] for row in data1_sort ])
-  e_x1 = np.array([ row[7] for row in data1_sort ])
-  e_y1 = np.array([ row[8] for row in data1_sort ])
-  w_x1 = np.array([ row[9] for row in data1_sort ])
-  w_y1 = np.array([ row[10] for row in data1_sort ])
+  wid2 = np.array([ row[1] for row in data2_sort ])
+  wid1 = np.array([ row[1] for row in data1_sort ])
+  dec2 = np.array([ row[3] for row in data2_sort ]).astype(np.float)
+  dec1 = np.array([ row[3] for row in data1_sort ]).astype(np.float)
+  ra2 = np.array([ row[2] for row in data2_sort ]).astype(np.float)
+  ra1 = np.array([ row[2] for row in data1_sort ]).astype(np.float)
+  mag2e = np.array([ row[4] for row in data2_sort ])
+  mag1e = np.array([ row[4] for row in data1_sort ])
+  mag2w = np.array([ row[5] for row in data2_sort ])
+  mag1w = np.array([ row[5] for row in data1_sort ])
+  e_x1 = np.array([ row[6] for row in data1_sort ])
+  e_y1 = np.array([ row[7] for row in data1_sort ])
+  w_x1 = np.array([ row[8] for row in data1_sort ])
+  w_y1 = np.array([ row[9] for row in data1_sort ])
   
-  e_x2 = np.array([ row[7] for row in data2_sort ])
-  e_y2 = np.array([ row[8] for row in data2_sort ])
-  w_x2 = np.array([ row[9] for row in data2_sort ])
-  w_y2 = np.array([ row[10] for row in data2_sort ])
+  e_x2 = np.array([ row[6] for row in data2_sort ])
+  e_y2 = np.array([ row[7] for row in data2_sort ])
+  w_x2 = np.array([ row[8] for row in data2_sort ])
+  w_y2 = np.array([ row[9] for row in data2_sort ])
   
   
   if ra2.max() > ra1.max():
@@ -242,7 +238,10 @@ for field_pair in overlap_sets:
         mean_ra = 0.5 * (ra1[i] + ra2_m_sort[0])
         mean_dec = 0.5 * (dec1[i] + dec2_m_sort[0])
 #        match_1_list.append( "%19s %19s %19s %19s %i %9.5f %9.5f %6s %6s %6s %6s %8s %8s %8s %8s %8s %8s %8s %8s " %(eid1[i],wid1[i],eid2_m_sort[0],wid2_m_sort[0],np.sum(rcond), mean_ra, mean_dec,mag1e[i],mag1w[i],mag2e_m_sort[0],mag2w_m_sort[0], e_x1[i],e_y1[i],w_x1[i], w_y1[i],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0]) )
-        match_1_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i],eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0]) )
+        if int(field1[1:]) < int(field2[1:]): #if iterating through the lower numbered field     DO i NEED TO DO THIS...? CANOT TELL IF THIS WILL HELP OR ADD USELESS COMPLEXITY i THINK IT'S A GOOD IDEA THOUHG
+          match_1_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i],eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0]) )
+        if int(field2[1:]) < int(field1[1:]): #if iterating through the higher numbered field
+          match_1_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid2_m_sort[0],wid2_m_sort[0], ra2_m_sort[0], dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0], e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0],eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i] ) )
 
         #np.savetxt('./kelt_overlap_match/N01_N13_ew_cat.dat',match_1_list,fmt='%s')
         #put in some code to change the last entry in this line from '0' -> '1', to show that this object has overlap matches. This needs to make it
@@ -281,7 +280,10 @@ for field_pair in overlap_sets:
 #        if (abs(mag1e[i] - mag2e_m_sort[0]) <= 2.0) :
         mean_ra = 0.5 * (ra1[i] + ra2_m_sort[0])
         mean_dec = 0.5 * (dec1[i] + dec2_m_sort[0])
-        match_2_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i],eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[1],eid2_m_sort[1],wid2_m_sort[1],ra2_m_sort[1],dec2_m_sort[1],mag2e_m_sort[1],mag2w_m_sort[1],e_x2_m_sort[1],e_y2_m_sort[1],w_x2_m_sort[1],w_y2_m_sort[1]) )
+        if int(field1[1:]) < int(field2[1:]): #if iterating through the lower numbered field 
+          match_2_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i],eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0],eid2_m_sort[1],wid2_m_sort[1],ra2_m_sort[1],dec2_m_sort[1],mag2e_m_sort[1],mag2w_m_sort[1],e_x2_m_sort[1],e_y2_m_sort[1],w_x2_m_sort[1],w_y2_m_sort[1]) )
+        if int(field2[1:]) < int(field1[1:]): #if iterating through the higher numbered field 
+          match_2_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0],eid2_m_sort[1],wid2_m_sort[1],ra2_m_sort[1],dec2_m_sort[1],mag2e_m_sort[1],mag2w_m_sort[1],e_x2_m_sort[1],e_y2_m_sort[1],w_x2_m_sort[1],w_y2_m_sort[1],eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i]) )
 
       if (np.sum(rcond)==3):
         wid2_m = wid2_[rcond]
@@ -314,7 +316,10 @@ for field_pair in overlap_sets:
 #        if (abs(mag1e[i] - mag2e_m_sort[0]) <= 2.0) :
         mean_ra = 0.5 * (ra1[i] + ra2_m_sort[0])
         mean_dec = 0.5 * (dec1[i] + dec2_m_sort[0])
-        match_3_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i],eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[1],eid2_m_sort[1],wid2_m_sort[1],ra2_m_sort[1],dec2_m_sort[1],mag2e_m_sort[1],mag2w_m_sort[1],e_x2_m_sort[1],e_y2_m_sort[1],w_x2_m_sort[1],w_y2_m_sort[1], eid2_m_sort[2],wid2_m_sort[2],ra2_m_sort[2],dec2_m_sort[2],mag2e_m_sort[2],mag2w_m_sort[2],e_x2_m_sort[2],e_y2_m_sort[2],w_x2_m_sort[2],w_y2_m_sort[2]) )
+        if int(field1[1:]) < int(field2[1:]): #if iterating through the lower numbered field 
+          match_3_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i],eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0],eid2_m_sort[1],wid2_m_sort[1],ra2_m_sort[1],dec2_m_sort[1],mag2e_m_sort[1],mag2w_m_sort[1],e_x2_m_sort[1],e_y2_m_sort[1],w_x2_m_sort[1],w_y2_m_sort[1], eid2_m_sort[2],wid2_m_sort[2],ra2_m_sort[2],dec2_m_sort[2],mag2e_m_sort[2],mag2w_m_sort[2],e_x2_m_sort[2],e_y2_m_sort[2],w_x2_m_sort[2],w_y2_m_sort[2]) )
+        if int(field2[1:]) < int(field1[1:]): #if iterating through the higher numbered field 
+          match_3_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0],eid2_m_sort[1],wid2_m_sort[1],ra2_m_sort[1],dec2_m_sort[1],mag2e_m_sort[1],mag2w_m_sort[1],e_x2_m_sort[1],e_y2_m_sort[1],w_x2_m_sort[1],w_y2_m_sort[1], eid2_m_sort[2],wid2_m_sort[2],ra2_m_sort[2],dec2_m_sort[2],mag2e_m_sort[2],mag2w_m_sort[2],e_x2_m_sort[2],e_y2_m_sort[2],w_x2_m_sort[2],w_y2_m_sort[2],eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i]) )
 
       if (np.sum(rcond)==4):
         wid2_m = wid2_[rcond]
@@ -348,13 +353,22 @@ for field_pair in overlap_sets:
         mean_ra = 0.5 * (ra1[i] + ra2_m_sort[0])
         mean_dec = 0.5 * (dec1[i] + dec2_m_sort[0])
         print 'Damn! ' + str(field1) + ' ' + str(field2)
-        match_4_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i],eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[1],eid2_m_sort[1],wid2_m_sort[1],ra2_m_sort[1],dec2_m_sort[1],mag2e_m_sort[1],mag2w_m_sort[1],e_x2_m_sort[1],e_y2_m_sort[1],w_x2_m_sort[1],w_y2_m_sort[1], eid2_m_sort[2],wid2_m_sort[2],ra2_m_sort[2],dec2_m_sort[2],mag2e_m_sort[2],mag2w_m_sort[2],e_x2_m_sort[2],e_y2_m_sort[2],w_x2_m_sort[2],w_y2_m_sort[3],eid2_m_sort[3],wid2_m_sort[3],ra2_m_sort[3],dec2_m_sort[3],mag2e_m_sort[3],mag2w_m_sort[3],e_x2_m_sort[3],e_y2_m_sort[3],w_x2_m_sort[3],w_y2_m_sort[3]) )
+        if int(field1[1:]) < int(field2[1:]): #if iterating through the lower numbered field 
+          match_4_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i],eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0],eid2_m_sort[1],wid2_m_sort[1],ra2_m_sort[1],dec2_m_sort[1],mag2e_m_sort[1],mag2w_m_sort[1],e_x2_m_sort[1],e_y2_m_sort[1],w_x2_m_sort[1],w_y2_m_sort[1], eid2_m_sort[2],wid2_m_sort[2],ra2_m_sort[2],dec2_m_sort[2],mag2e_m_sort[2],mag2w_m_sort[2],e_x2_m_sort[2],e_y2_m_sort[2],w_x2_m_sort[2],w_y2_m_sort[3],eid2_m_sort[3],wid2_m_sort[3],ra2_m_sort[3],dec2_m_sort[3],mag2e_m_sort[3],mag2w_m_sort[3],e_x2_m_sort[3],e_y2_m_sort[3],w_x2_m_sort[3],w_y2_m_sort[3]) )
+        if int(field2[1:]) < int(field1[1:]): #if iterating through the higher numbered field 
+          match_4_list.append( "%i %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s %19s %19s %9.5f %9.5f %6s %6s %8s %8s %8s %8s" %(np.sum(rcond),eid2_m_sort[0],wid2_m_sort[0],ra2_m_sort[0],dec2_m_sort[0],mag2e_m_sort[0],mag2w_m_sort[0],e_x2_m_sort[0],e_y2_m_sort[0],w_x2_m_sort[0],w_y2_m_sort[0],eid2_m_sort[1],wid2_m_sort[1],ra2_m_sort[1],dec2_m_sort[1],mag2e_m_sort[1],mag2w_m_sort[1],e_x2_m_sort[1],e_y2_m_sort[1],w_x2_m_sort[1],w_y2_m_sort[1], eid2_m_sort[2],wid2_m_sort[2],ra2_m_sort[2],dec2_m_sort[2],mag2e_m_sort[2],mag2w_m_sort[2],e_x2_m_sort[2],e_y2_m_sort[2],w_x2_m_sort[2],w_y2_m_sort[3],eid2_m_sort[3],wid2_m_sort[3],ra2_m_sort[3],dec2_m_sort[3],mag2e_m_sort[3],mag2w_m_sort[3],e_x2_m_sort[3],e_y2_m_sort[3],w_x2_m_sort[3],w_y2_m_sort[3],eid1[i],wid1[i], ra1[i], dec1[i], mag1e[i],mag1w[i], e_x1[i],e_y1[i],w_x1[i], w_y1[i]) )
 
 
 #use this line when doing 1 -> 2 overlap matching
-  np.savetxt('/media/sf_Astro/k_cat/overlap_1_2/{0}_overlap.dat'.format(field1 + '_' + field2),(match_1_list + match_2_list + match_3_list + match_4_list),fmt='%s')
-#  np.savetxt('/media/sf_Astro/k_cat/overlap_2_1/{0}_overlap.dat'.format(field2 + '_' + field1),(match_1_list + match_2_list + match_3_list + match_4_list),fmt='%s')
+  if int(field1[1:]) < int(field2[1:]):
+    print("field1 : {0}              field2 : {1}\nwrite to overlap_1_2".format(field1,field2))
+    np.savetxt('/media/sf_Astro/k_cat/overlap_1_2/{0}_overlap.dat'.format(field1 + '_' + field2),(match_1_list + match_2_list + match_3_list + match_4_list),fmt='%s')
+    #np.savetxt('/media/sf_Astro/k_cat/temp1/{0}_overlap.dat'.format(field1 + '_' + field2),(match_1_list + match_2_list + match_3_list + match_4_list),fmt='%s')
 
+  else:# int(field2[1:]) < int(field1[1:]):
+    print("field1 : {0}              field2 : {1}\nwrite to overlap_2_1".format(field1,field2))
+    np.savetxt('/media/sf_Astro/k_cat/overlap_2_1/{0}_overlap.dat'.format(field2 + '_' + field1),(match_1_list + match_2_list + match_3_list + match_4_list),fmt='%s')
+    #np.savetxt('/media/sf_Astro/k_cat/temp2/{0}_overlap.dat'.format(field2 + '_' + field1),(match_1_list + match_2_list + match_3_list + match_4_list),fmt='%s')
 
 #  np.savetxt('./new/kelt_overlap_match_all/{0}_ew_cat.dat'.format('N01_N13'),(match_1_list + match_2_list + match_3_list + match_4_list),fmt='%s')
 
@@ -369,54 +383,22 @@ for field_pair in overlap_sets:
   #np.savetxt('./kelt_e_w_multi_match/{0}_ew_cat.dat'.format(field),(match_2_list + match_3_list + match_4_list),fmt='%s')
   #np.savetxt('./kelt_e_w_no_matches/{0}_e_cat.dat'.format(field),match_0_list,fmt='%s')  
   print field1 + ' ' + field2 + ' : ' + '%.1f' %((time.clock() - start_time)/60.) + " minutes"
-'''      
-      if (np.sum(rcond)==2): #if 2 west objects match to one east object
-        asep = angsep[rcond]
-        ra2_m = ra2_[rcond]
-        dec2_m = dec2_[rcond]
-        file2_line_m = file2_line_[rcond]
-        order = np.argsort(asep)
-        asep_sort = asep[order]
-        ra2_m_sort = ra2_m[order]
-        dec2_m_sort = dec2_m[order]
-        mag2_m = mag2_[rcond]
-        mag2_m_sort = mag2_m[order]
-        if (abs(mag1[i] - mag2_m_sort[0]) <= 1.0) & (abs(mag1[i] - mag2_m_sort[1]) <= 1.0):
-          match_2_list.append( "%s %d %9.5f %8.5f %2.3f %s %s" %(id1[i],np.sum(rcond), ra1[i], dec1[i],\
-          mag1[i], ' '.join(map(str,file2_line_m[0])),' '.join(map(str,file2_line_m[1]))) )
-          match_1_list.append( "%s %d %9.5f %8.5f %2.3f %s" %(id1[i],np.sum(rcond), ra1[i], dec1[i],\
-          mag1[i], ' '.join(map(str,file2_line_m[0]))) )
-        if (abs(mag1[i] - mag2_m_sort[0]) <= 1.0) & (abs(mag1[i] - mag2_m_sort[1]) > 1.0):
-          match_1_list.append( "%s %d %9.5f %8.5f %2.3f %s" %(id1[i],np.sum(rcond), ra1[i], dec1[i],\
-          mag1[i], ' '.join(map(str,file2_line_m[0]))) )
-
-      if (np.sum(rcond)==3): #if 3 west objects match to one east object
-        asep = angsep[rcond]
-        ra2_m = ra2_[rcond]
-        dec2_m = dec2_[rcond]
-        file2_line_m = file2_line_[rcond]
-        order = np.argsort(asep)
-        asep_sort = asep[order]
-        ra2_m_sort = ra2_m[order]
-        dec2_m_sort = dec2_m[order]
-        mag2_m = mag2_[rcond]
-        mag2_m_sort = mag2_m[order]
-        match_3_list.append("%s %d %9.5f %8.5f %2.3f %s %s %s" %(id1[i],np.sum(rcond), ra1[i], dec1[i],\
-        mag1[i], ' '.join(map(str,file2_line_m[0])),' '.join(map(str,file2_line_m[1])),' '.join(map(str,file2_line_m[2]))) )
-      if (np.sum(rcond)==4): #if 3 west objects match to one east object
-        asep = angsep[rcond]
-        ra2_m = ra2_[rcond]
-        dec2_m = dec2_[rcond]
-        file2_line_m = file2_line_[rcond]
-        order = np.argsort(asep)
-        asep_sort = asep[order]
-        ra2_m_sort = ra2_m[order]
-        dec2_m_sort = dec2_m[order]
-        mag2_m = mag2_[rcond]
-        mag2_m_sort = mag2_m[order]
-        match_4_list.append("%s %d %9.5f %8.5f %2.3f %s %s %s %s" %(id1[i],np.sum(rcond), ra1[i], dec1[i],\
-        mag1[i],' '.join(map(str,file2_line_m[0])),' '.join(map(str,file2_line_m[1])),' '.join(map(str,file2_line_m[2])),\
-        ' '.join(map(str,file2_line_m[3]))) )
-'''
-
-
+  
+  
+  
+#for field_pair in [('N05','N06'),('N06','N07')]:
+for field_pair in overlap_sets: #loops through all pairs of overlapping fields
+    file1 = field_pair[0] + '_all.dat'
+    file2 = field_pair[1] + '_all.dat'
+    
+    #first iterates through each object in file1 comparing to all objs in file2, then does the reverse
+    Overlap_search(file1,file2)
+    Overlap_search(file2,file1)
+    
+    dir_cat = "/media/sf_Astro/k_cat/"
+    cat_command = "cat {0}overlap_1_2/{1}_overlap.dat {0}overlap_2_1/{1}_overlap.dat | sort | uniq > {0}overlap_all/{1}_overlap.dat".format(dir_cat,field_pair[0]+'_'+field_pair[1]) 
+    call(cat_command, shell=True)
+    print("{1}_overlap.dat has been written to directory {0}overlap_all/".format(dir_cat,field_pair[0]+'_'+field_pair[1]))
+cat_cmd_all = "cat {0}overlap_all/* > {0}overlap_all.dat".format(dir_cat)
+call(cat_cmd_all, shell=True)
+print("{0}overlap_all.dat has been written to disk".format(dir_cat))

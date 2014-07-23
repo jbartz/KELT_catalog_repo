@@ -97,7 +97,7 @@ for file_no in range(0,len(kelt_cat_files),2):
     cond = (e_dec >= lowdec) & (e_dec <= highdec)
     if (np.sum(cond)==0): #if no west objects match to the east object's dec
 #####THIS LINE BELOW IS GOOD, I BELIEVE. BE SURE TO FIX THE OTHER OUTPUTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      match_0_list.append("%19s %d %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL',0, w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
+      match_0_list.append("%19s %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL', w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
 #############################################################################################################################
     if (np.sum(cond)>=1): #if one or more west objects matches to the east object's dec
       e_id_ = e_id[cond]
@@ -110,7 +110,7 @@ for file_no in range(0,len(kelt_cat_files),2):
       angsep = dAngSep(w_ra[i], w_dec[i],e_ra_, e_dec_)
       rcond = (angsep<rad)
       if (np.sum(rcond)==0): #if none of the western objects in the dec range are within the matching radius of the east object
-        match_0_list.append("%19s %d %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL',0, w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
+        match_0_list.append("%19s %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL', w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
       if (np.sum(rcond)==1): #if exactly one of the western objects in the dec range are within the matching radius of the east object
         asep = angsep[rcond]
         e_id_m = e_id_[rcond]
@@ -133,9 +133,9 @@ for file_no in range(0,len(kelt_cat_files),2):
           mean_dec = 0.5*(w_dec[i] + e_dec_m_sort[0])
           single_e_w.append(e_id_m_sort[0]+ " " +w_id[i]) #used to keep track of all the 1:1 matches
           #match_1_list.append( "%s %d %9.5f %8.5f %2.3f %s" %(e_id[i],np.sum(rcond), e_ra[i], e_dec[i],e_mag[i], ' '.join(map(str,w_file_line_m[0]))) )
-          match_1_list.append( "%19s %d %19s %9.5f %9.5f %6.3f %6.3f %9.3f %9.3f %9.3f %9.3f" %(e_id_m_sort[0],0, w_id[i], mean_ra, mean_dec,e_mag_m_sort[0],w_mag[i],e_x_m_sort[0],e_y_m_sort[0],w_x[i],w_y[i]) )
+          match_1_list.append( "%19s %19s %9.5f %9.5f %6.3f %6.3f %9.3f %9.3f %9.3f %9.3f" %(e_id_m_sort[0], w_id[i], mean_ra, mean_dec,e_mag_m_sort[0],w_mag[i],e_x_m_sort[0],e_y_m_sort[0],w_x[i],w_y[i]) )
         if (abs(w_mag[i] - e_mag_m_sort[0]) > 1.0): #if the magnitude matching criteria is not met, there is no match
-          match_0_list.append("%19s %d %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL',0, w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
+          match_0_list.append("%19s %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL', w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
             
       if (np.sum(rcond)==2): #if 2 west objects match to one east object
         asep = angsep[rcond]
@@ -159,13 +159,13 @@ for file_no in range(0,len(kelt_cat_files),2):
         mag_diff_sort = mag_diff[order]
         if (mag_diff_sort[1] <= 1.0): #if the greatest magnitude diff. between the 2 matching western objects is less than 1.0 mag, add the eastern object, plus both western objects to match_2_list
           #single_e_w.append(e_id[i] + " " + w_id_m_sort[0]) #not sure if this belongs here- let's see... hmm, probably not. check anyway. Maybe I need to have this sorted by angsep after all, and not by delta_mag
-          match_2_list.append( "%19s %d %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
-          %(w_id[i],1, w_x[i],w_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1] ))
+          match_2_list.append( "%19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
+          %(w_id[i], w_x[i],w_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1] ))
         if (mag_diff_sort[1] > 1.0) & (mag_diff_sort[0] <=0): #if the obj. w/ largest mag. diff. doesn't make the mag. cut, but the other does, append match_1_list w/ info for eastern object, and nearest (by mag.) western object
-          match_1_list.append( "%19s %d %19s %9.5f %9.5f %6.3f %6.3f %9.3f %9.3f %9.3f %9.3f" %(e_id_m_sort[0],0, w_id[i], mean_ra, mean_dec,e_mag_m_sort[0],w_mag[i],e_x_m_sort[0],e_y_m_sort[0],w_x[i],w_y[i]) )
+          match_1_list.append( "%19s %19s %9.5f %9.5f %6.3f %6.3f %9.3f %9.3f %9.3f %9.3f" %(e_id_m_sort[0], w_id[i], mean_ra, mean_dec,e_mag_m_sort[0],w_mag[i],e_x_m_sort[0],e_y_m_sort[0],w_x[i],w_y[i]) )
           #single_e_w.append(e_id[i] + " " + w_id_m_sort[0]) #used to keep track of 1:1 matches for comparison between e to w and w to e matching
         if (mag_diff_sort[0] > 1.0):
-          match_0_list.append("%19s %d %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL',0, w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
+          match_0_list.append("%19s %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL', w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
 
       if (np.sum(rcond)==3): #if 3 west objects match to one east object
         asep = angsep[rcond]
@@ -188,17 +188,17 @@ for file_no in range(0,len(kelt_cat_files),2):
         mag_diff_sort = mag_diff[order]
         if (mag_diff_sort[2] <= 1.0):
           #single_e_w.append(e_id[i] + " " + w_id_m_sort[0])
-          match_3_list.append( "%19s %d %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
-          %(w_id[i],1, w_x[i],e_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1],e_id_m_sort[2], e_x_m_sort[2],e_y_m_sort[2],e_ra_m_sort[2], e_dec_m_sort[2], e_mag_m_sort[2] ))
+          match_3_list.append( "%19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
+          %(w_id[i], w_x[i],e_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1],e_id_m_sort[2], e_x_m_sort[2],e_y_m_sort[2],e_ra_m_sort[2], e_dec_m_sort[2], e_mag_m_sort[2] ))
         if (mag_diff_sort[2] > 1.0) & (mag_diff_sort[1] <=1.0):
           #single_e_w.append(e_id[i] + " " + w_id_m_sort[0])
-          match_2_list.append( "%19s %d %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
-          %(w_id[i],1, w_x[i],w_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1] ))
+          match_2_list.append( "%19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
+          %(w_id[i], w_x[i],w_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1] ))
         if (mag_diff_sort[0] <= 1.0):
           #single_e_w.append(e_id[i] + " " + w_id_m_sort[0])
-          match_1_list.append( "%19s %d %19s %9.5f %9.5f %6.3f %6.3f %9.3f %9.3f %9.3f %9.3f" %(e_id_m_sort[0],0, w_id[i], mean_ra, mean_dec,e_mag_m_sort[0],w_mag[i],e_x_m_sort[0],e_y_m_sort[0],w_x[i],w_y[i]) )
+          match_1_list.append( "%19s %19s %9.5f %9.5f %6.3f %6.3f %9.3f %9.3f %9.3f %9.3f" %(e_id_m_sort[0], w_id[i], mean_ra, mean_dec,e_mag_m_sort[0],w_mag[i],e_x_m_sort[0],e_y_m_sort[0],w_x[i],w_y[i]) )
         if (mag_diff_sort[0] > 1.0):
-          match_0_list.append("%19s %d %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL',0, w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
+          match_0_list.append("%19s %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL', w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
 
 
       if (np.sum(rcond)==4): #if 3 west objects match to one east object
@@ -223,21 +223,21 @@ for file_no in range(0,len(kelt_cat_files),2):
 
         if (mag_diff_sort[3] <= 1.0):
           #single_e_w.append(e_id[i] + " " + w_id_m_sort[0])
-          match_4_list.append(  "%19s %d %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
-          %(w_id[i],1, w_x[i],w_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1],e_id_m_sort[2], e_x_m_sort[2],e_y_m_sort[2],e_ra_m_sort[2], e_dec_m_sort[2], e_mag_m_sort[2],e_id_m_sort[3], e_x_m_sort[3],e_y_m_sort[3],e_ra_m_sort[3], e_dec_m_sort[3], e_mag_m_sort[3] ))
+          match_4_list.append(  "%19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
+          %(w_id[i], w_x[i],w_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1],e_id_m_sort[2], e_x_m_sort[2],e_y_m_sort[2],e_ra_m_sort[2], e_dec_m_sort[2], e_mag_m_sort[2],e_id_m_sort[3], e_x_m_sort[3],e_y_m_sort[3],e_ra_m_sort[3], e_dec_m_sort[3], e_mag_m_sort[3] ))
         if (mag_diff_sort[3] > 1.0) & (mag_diff_sort[2] <=1.0):
           #single_e_w.append(e_id[i] + " " + w_id_m_sort[0])
-          match_3_list.append( "%19s %d %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
-          %(w_id[i],1, w_x[i],e_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1],e_id_m_sort[2], e_x_m_sort[2],e_y_m_sort[2],e_ra_m_sort[2], e_dec_m_sort[2], e_mag_m_sort[2] ))
+          match_3_list.append( "%19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
+          %(w_id[i], w_x[i],e_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1],e_id_m_sort[2], e_x_m_sort[2],e_y_m_sort[2],e_ra_m_sort[2], e_dec_m_sort[2], e_mag_m_sort[2] ))
         if (mag_diff_sort[2] > 1.0) & (mag_diff_sort[1] <=1.0):
           #single_e_w.append(e_id[i] + " " + w_id_m_sort[0])
-          match_2_list.append( "%19s %d %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
-          %(w_id[i],1, w_x[i],w_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1] ))
+          match_2_list.append( "%19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f %19s %9.3f %9.3f %9.5f %9.5f %6.3f" \
+          %(w_id[i], w_x[i],w_y[i],w_ra[i], w_dec[i], w_mag[i], e_id_m_sort[0],e_x_m_sort[0],e_y_m_sort[0], e_ra_m_sort[0], e_dec_m_sort[0], e_mag_m_sort[0], e_id_m_sort[1], e_x_m_sort[1],e_y_m_sort[1],e_ra_m_sort[1], e_dec_m_sort[1], e_mag_m_sort[1] ))
         if (mag_diff_sort[1] > 1.0) & (mag_diff_sort[0] <= 1.0):
-          match_1_list.append( "%19s %d %19s %9.5f %9.5f %6.3f %6.3f %9.3f %9.3f %9.3f %9.3f" %(e_id_m_sort[0],0, w_id[i], mean_ra, mean_dec,e_mag_m_sort[0],w_mag[i],e_x_m_sort[0],e_y_m_sort[0],w_x[i],w_y[i]) )
+          match_1_list.append( "%19s %19s %9.5f %9.5f %6.3f %6.3f %9.3f %9.3f %9.3f %9.3f" %(e_id_m_sort[0], w_id[i], mean_ra, mean_dec,e_mag_m_sort[0],w_mag[i],e_x_m_sort[0],e_y_m_sort[0],w_x[i],w_y[i]) )
           #single_e_w.append(e_id[i] + " " + w_id_m_sort[0])
         if (mag_diff_sort[0] > 1.0):
-          match_0_list.append("%19s %d %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL',0, w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
+          match_0_list.append("%19s %19s %9.5f %9.5f %6s %6.3f %9s %9s %9.3f %9.3f" %('NULL', w_id[i], w_ra[i], w_dec[i],'NULL',w_mag[i],'NULL','NULL',w_x[i],w_y[i]) )
 
 
 #output columns in ./kelt_e_w_match/ are: e_id, # of coord matches, w_id, ra (avg.), dec (avg.), e_mag, w_mag, e_x, e_y, w_x, w_y

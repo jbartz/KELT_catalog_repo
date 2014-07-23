@@ -17,21 +17,22 @@ start_time = time.clock()
 #only want to read the 'rectangular' part of the overlap_all.dat file
 col_range = range(21)
 #overlap_list = np.genfromtxt('/media/sf_Astro/k_cat/overlap_all.dat',usecols=(col_range),dtype=str)
-overlap_list = np.genfromtxt('/media/sf_Astro/k_cat/overlap_all.dat',usecols=(col_range),dtype=str)
+overlap_list = np.genfromtxt('/media/sf_Astro/k_cat/S12_S26_overlap_all.dat',usecols=(col_range),dtype=str)
 overlap_list = overlap_list[:,1:]
 
 fields=[]
 files_canon = [ f for f in listdir('/media/sf_Astro/k_cat/single_canon/') if isfile(join('/media/sf_Astro/k_cat/single_canon/',f))]
+files_canon = ['S12_all.dat','S26_all.dat']
 for filename in files_canon:
   field = filename[:3]
   exec "file_%s = np.genfromtxt('/media/sf_Astro/k_cat/single_canon/{0}'.format(filename), dtype='|S44')" %field
   exec "remove_f_%s = []" %field
   exec "keep_f_%s = []" %field
   fields.append(field)
-  f = open(('/media/sf_Astro/k_cat/single_canon/' + filename),mode='r')
-  exec('file_%s_lines = f.readlines()' %field)
-  #print 'read all lines in file 2...'
-  f.close()
+  #f = open(('/media/sf_Astro/k_cat/single_canon/' + filename),mode='r')
+  #exec('file_%s_lines = f.readlines()' %field)
+  ##print 'read all lines in file 2...'
+  #f.close()
 #  
 #f = open('./new/canon_all.dat',mode='r')
 #canon_list_actual_list = f.readlines()
@@ -82,7 +83,7 @@ for i, line in enumerate(overlap_list):
     c_id1 = w1id
     c_1x = w1x.astype(np.float)
     if w1id == 'NULL':
-      print 'Error! both field 1 objects are "null" in line ' + i
+      print 'Error! both field 1 objects are "null" in line ' + str(i)
   if e1id != 'NULL':
     c_id1 = e1id
     c_1x = e1x.astype(np.float)
@@ -90,7 +91,7 @@ for i, line in enumerate(overlap_list):
     c_id2 = w2id
     c_2x = w2x.astype(np.float)
     if w2id == 'NULL':
-      print 'Error! both field 2 objects are "null" in line ' + i
+      print 'Error! both field 2 objects are "null" in line ' + str(i)
   if e2id != 'NULL':
     c_id2 = e2id
     c_2x = e2x.astype(np.float)
@@ -118,8 +119,8 @@ for i, line in enumerate(overlap_list):
     #somehow use sed to change the last entry in each line this hits from '0' -> '1', indicating
     #that the object has other matches and should be looked up
 for j in fields:
-  exec "this = '/media/sf_Astro/k_cat/sed_remove/sed_remove%s' " %j
-  exec "that = '/media/sf_Astro/k_cat/sed_keep/sed_keep%s' " %j
+  exec "this = '/media/sf_Astro/k_cat/sed_remove/0_sed_remove%s' " %j
+  exec "that = '/media/sf_Astro/k_cat/sed_keep/0_sed_keep%s' " %j
   with open( this, 'a') as outputfile1:
     for line in eval("remove_f_%s" %j):
       outputfile1.write("/" + line + "/d" + "\n")

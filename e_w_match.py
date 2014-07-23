@@ -40,9 +40,15 @@ def dAngSep(ra1d, dec1d, ra2d, dec2d):
    ra2r, dec2r = np.radians([ra2d, dec2d])
    return np.degrees(rAngSep(ra1r, dec1r, ra2r, dec2r))
 ###-----End copied section for computing angular seperation-----###
+f_path = '/media/sf_Astro/k_cat/kelt_cat_raw'
 
 
-kelt_cat_files = [ f for f in listdir('/media/sf_Astro/k_cat/kelt_cat_raw/') if isfile(join('/media/sf_Astro/k_cat/kelt_cat_raw/',f))]
+#use if working with a directory of catalog files
+#kelt_cat_files = [ f for f in listdir('/media/sf_Astro/k_cat/kelt_cat_raw/') if isfile(join('/media/sf_Astro/k_cat/kelt_cat_raw/',f))]
+
+#use if just working with one or two fields at a time
+kelt_cat_files = ['cat_S12_east.dat','cat_S12_west.dat']
+
 for file_no in range(0,len(kelt_cat_files),2):
 #for file_no in range(len(kelt_cat_files[36:]),len(kelt_cat_files),2):
 #for file_no in range(0,2,2):
